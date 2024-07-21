@@ -17,10 +17,10 @@ app.use('/admin', express.static(path.join(__dirname, 'api.jpo/admin')));
 app.use('/', express.static(path.join(__dirname, 'api.jpo/register')));
 
 const db = mysql.createConnection({
-    host: 'sql212.infinityfree.com',
-    user: 'if0_36944326',
-    password: 'JPOEPITECH2024',
-    database: 'if0_36944326_jpo_test'
+    host: 'mysql-jpoepitech.alwaysdata.net',
+    user: '369894',
+    password: 'jpoepitechnogeproductions2024',
+    database: 'jpoepitech_jpo2024'
 });
 
 db.connect((err) => {
