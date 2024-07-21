@@ -1,0 +1,248 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background: url('') no-repeat center center/cover;
+}
+
+header {
+    display: grid;
+    /* grid-template-columns: 1fr auto 1fr; */
+    grid-template-columns: repeat(3 , 1fr);
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: #333;
+    color: #fff;
+}
+
+.left-nav, .right-nav {
+    display: flex;
+    align-items: center;
+}
+
+.center-logo {
+    display: flex;
+    justify-content: center;
+}
+
+.logo_central {
+    max-width: 100px; /* Adjust size as needed */
+}
+
+header .logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+header nav ul {
+    list-style: none;
+    display: flex;
+    gap: 1rem;
+}
+
+header nav ul li a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.hero {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: #ffffff;
+}
+
+.hero .btn {
+    padding: 1rem 2rem;
+    background-color: #0b81c5;
+    color: #000000;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: 1rem;
+}
+
+.beats {
+    padding: 2rem;
+    text-align: center;
+}
+
+.beat-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: center;
+}
+
+.beat {
+    padding: 1rem;
+    width: 350px;
+    background-color: #333;
+}
+
+.cadre_contact {
+    /* padding: 2rem; */
+    width: 100%;
+    max-width: 400px;
+    justify-content: center;
+    background-color: #333;
+    color: #0b81c5;
+}
+
+.beat img {
+    width: 100%;
+    height: auto;
+}
+
+.beat .btn {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background-color: #0b81c5;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: 1rem;
+}
+
+footer {
+    background-color: #333;
+    color: white;
+    padding: 30px;
+    text-align: center;
+}
+
+.footer-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.contact-widget {
+    margin-bottom: 20px;
+}
+
+.contact-widget h4 {
+    color: #0b81c5;
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.contact-list {
+    list-style: none;
+    padding: 0;
+}
+
+.contact-list li {
+    margin-bottom: 10px;
+}
+
+.myfooter {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    flex-direction: column;
+    align-items: center;
+}
+
+.contact-list a {
+    color: #0b81c5;
+    text-decoration: none;
+}
+
+.contact-list a:hover {
+    text-decoration: underline;
+}
+
+button.btn-primary {
+    background-color: #0b81c5;
+    border-color: #0b81c5;
+}
+
+button.btn-primary:hover {
+    background-color: #0b81c5;
+    border-color: #0b81c5;
+}
+
+.social_media_icons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.social_media_icons a {
+    display: inline-block;
+    margin: 0 10px;
+}
+
+.for_contact {
+    text-align: center;
+    display:grid;
+    grid-template-columns:  718.328px 734.328px 450.328px;
+    background-color: #333;
+}
+
+.but_social {
+    width: 50px;
+    height: 50px;
+}
+
+@media (max-width: 768px) {
+    header {
+        display: grid;
+        /* grid-template-columns: 1fr auto 1fr; */
+        grid-template-columns: repeat(3 , 1fr);
+        align-items: center;
+        padding: 1rem 2rem;
+        background-color: #333;
+        color: #fff;
+    }
+    
+    .left-nav, .right-nav {
+        display: flex;
+        align-items: center;
+    }
+    
+    .center-logo {
+        display: flex;
+        justify-content: center;
+    }
+    
+    .logo_central {
+        max-width: 60px; /* Adjust size as needed */
+    }
+
+    header nav ul {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .hero {
+        padding: 2rem 1rem;
+    }
+
+    .beats {
+        padding: 1rem;
+    }
+
+    .for_contact {
+        display: flex;
+    }
+
+    .beat {
+        width: 100%;
+        max-width: 350px;
+    }
+
+    .cadre_  {
+        width: 90%;
+    }
+
+    .myfooter {
+        flex-direction: column;
+        display: flex;
+    }
+
+    .but_social {
+        width: 20px;
+        height: 20px;
+    }
+}
