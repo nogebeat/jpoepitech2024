@@ -71,6 +71,14 @@ db.query(`CREATE TABLE IF NOT EXISTS jeu (
     }
 });
 
+db.connect((err) => {
+    if (err) {
+      console.error('Error : ' + err.stack);
+      return;
+    }
+    console.log('Connected Succed to database as ID : ' + db.threadId);
+  });
+
 app.post('/register', (req, res) => {
     console.log('Received data:', req.body);
     const { group_name, players1, players2, players3, players4, players5, players6, players7, players8, players9, players10, password } = req.body;
