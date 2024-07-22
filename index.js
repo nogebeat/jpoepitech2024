@@ -84,7 +84,7 @@ app.post('/register', (req, res) => {
                 return res.status(500).json({ msg: 'Database query error' });
             }
             if (results.length > 0) {
-                return res.status(400).json({ msg: 'Group name or one of the player names already exists' });
+                return res.status(202).json({ msg: 'LE NOM DU JOUER OU DU GROUPE EXISTE DEJA | CONTACT YOUR ADMINISTRATOR' });
             }
             db.query(
                 `INSERT INTO user (group_name, players1, players2, players3, players4, players5, players6, players7, players8, players9, players10, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
@@ -102,7 +102,7 @@ app.post('/register', (req, res) => {
                                 console.error('Database insertion error:', err);
                                 return res.status(500).json({ msg: 'Database insertion error' });
                             }
-                            res.status(200).json({ msg: 'User registered' });
+                            res.status(200).json({ msg: 'GROUPE ENREGISTRE' });
                         }
                     );
                 }
@@ -119,11 +119,11 @@ app.post('/submit', (req, res) => {
     const validReponses = ['JAMES', 'CHANCE', 'KENZO', 'MERYL', 'LESLY'];
 
     if (!validReponses.includes(reponse)) {
-        return res.status(400).json({ msg: 'Invalid response' });
+        return res.status(202).json({ msg: 'Mauvaise Réponse' });
     }
 
     if (!password) {
-        return res.status(400).json({ msg: 'Password is required' });
+        return res.status(202).json({ msg: 'Le Mot de passe est important' });
     }
 
     db.query(`SELECT * FROM jeu WHERE group_name = ? AND password = ?`, [group_name, password], (err, results) => {
@@ -132,13 +132,13 @@ app.post('/submit', (req, res) => {
             return res.status(500).json({ msg: 'Database query error' });
         }
         if (results.length === 0) {
-            return res.status(400).json({ msg: 'Invalid group name or password' });
+            return res.status(200).json({ msg: 'Mot de Passe ou Nom du groupe Invalide' });
         } else {
             const user = results[0];
             const answersArray = user.answers ? user.answers.split(',') : [];
 
             if (answersArray.includes(reponse)) {
-                return res.status(400).json({ msg: 'User already submitted this response' });
+                return res.status(200).json({ msg: 'Vous avez déjà soumis cette réponse' });
             } else {
                 answersArray.push(reponse);
                 const newAnswers = answersArray.join(',');
@@ -157,7 +157,7 @@ app.post('/submit', (req, res) => {
                         console.error('Database update error:', err);
                         return res.status(500).json({ msg: 'Database update error' });
                     }
-                    res.status(200).json({ msg: 'Response submitted and points updated' });
+                    res.status(200).json({ msg: `BONNE REPONSE VOUS OBTENEZ ${a}` });
                 });
             }
         }
@@ -189,15 +189,12 @@ app.post('/admin', (req, res) => {
     const validReponses = ['JAMES', 'CHANCE', 'KENZO', 'MERYL', 'LESLY'];
 
     if (!validReponses.includes(reponse)) {
-        return res.status(400).json({ msg: 'Invalid response' });
+        return res.status(202).json({ msg: 'Mauvaise Réponse' });
     }
 
             const user = results[0];
             const answersArray = user.answers ? user.answers.split(',') : [];
 
-            if (answersArray.includes(reponse)) {
-                return res.status(400).json({ msg: 'User already submitted this response' });
-            } else {
                 answersArray.push(reponse);
                 const newAnswers = answersArray.join(',');
                 let a = 0;
@@ -217,7 +214,6 @@ app.post('/admin', (req, res) => {
                     }
                     res.status(200).json({ msg: 'Response submitted and points updated' });
                 });
-            }
 });
 
 

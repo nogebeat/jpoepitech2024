@@ -1,3 +1,5 @@
+// <!-- A NE PAS TOUCHER -->
+
 document.getElementById('submit-form').addEventListener('submit', async function(event) {
     event.preventDefault();
 
@@ -25,21 +27,19 @@ document.getElementById('submit-form').addEventListener('submit', async function
         }
     } catch (error) {
         const messageDiv = document.getElementById('msg');
-        messageDiv.innerText = responseData.msg;
+        messageDiv.innerText = 'An error occurred. Please try again later. or Contact the Administrator ';
         messageDiv.style.color = 'red';
     }
 });
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Fonction pour récupérer les résultats du leaderboard
     function fetchLeaderboard() {
         fetch('/leaderboard')
             .then(response => response.json())
             .then(data => {
                 const tableBody = document.querySelector('#leaderboard-table tbody');
-                tableBody.innerHTML = ''; // Vider le tableau avant d'ajouter les nouvelles données
+                tableBody.innerHTML = '';
 
-                // Trier les données par points en ordre décroissant
                 data.sort((a, b) => b.points - a.points);
 
                 data.forEach((user, index) => {
@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     const groupNameCell = document.createElement('td');
                     const pointsCell = document.createElement('td');
 
-                    rankCell.textContent = index + 1; // Rang
+                    rankCell.textContent = index + 1;
                     groupNameCell.textContent = user.group_name;
                     pointsCell.textContent = user.points;
 
@@ -63,6 +63,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     }
 
-    // Appeler la fonction pour récupérer et afficher les résultats du leaderboard
     fetchLeaderboard();
 });
+// <!-- A NE PAS TOUCHER -->

@@ -1,3 +1,5 @@
+// <!-- A NE PAS TOUCHER -->
+
 document.getElementById('register-form').addEventListener('submit', async function(event) {
     event.preventDefault();
 
@@ -25,7 +27,8 @@ document.getElementById('register-form').addEventListener('submit', async functi
         }
     } catch (error) {
         const messageDiv = document.getElementById('msg');
-        messageDiv.innerText = responseData.msg;
+        messageDiv.innerText = 'An error occurred. Please try again later. or Contact the Administrator ';
         messageDiv.style.color = 'red';
     }
 });
+// <!-- A NE PAS TOUCHER -->
