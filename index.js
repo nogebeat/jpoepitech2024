@@ -192,9 +192,20 @@ app.post('/admin', (req, res) => {
         return res.status(202).json({ msg: 'Mauvaise Réponse' });
     }
 
+    db.query(`SELECT * FROM jeu WHERE group_name = ?`, [group_name], (err, results) => {
+        if (err) {
+            console.error('Database query error:', err);
+            return res.status(500).json({ msg: 'Database query error' });
+        }
+        if (results.length === 0) {
+            return res.status(200).json({ msg: 'Nom du groupe Invalide' });
+        } else {
             const user = results[0];
             const answersArray = user.answers ? user.answers.split(',') : [];
 
+            if (answersArray.includes(reponse)) {
+                return res.status(200).json({ msg: 'Vous avez déjà soumis cette réponse' });
+            } else {
                 answersArray.push(reponse);
                 const newAnswers = answersArray.join(',');
                 let a = 0;
@@ -212,9 +223,13 @@ app.post('/admin', (req, res) => {
                         console.error('Database update error:', err);
                         return res.status(500).json({ msg: 'Database update error' });
                     }
-                    res.status(200).json({ msg: 'Response submitted and points updated' });
+                    res.status(200).json({ msg: `BONNE REPONSE VOUS OBTENEZ ${a}` });
                 });
+            }
+        }
+    });
 });
+
 
 
 app.listen(PORT, () => {
