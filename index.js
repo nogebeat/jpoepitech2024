@@ -23,6 +23,13 @@ const db = mysql.createConnection({
     database: 'jpoepitech_jpo2024'
 });
 
+// const db = mysql.createConnection({
+//         host: 'localhost',
+//         user: 'root',
+//         password: '',
+//         database: 'jpo'
+//     });
+
 db.connect((err) => {
     if (err) {
         console.error('Could not connect to database', err);
@@ -44,7 +51,6 @@ db.query(`CREATE TABLE IF NOT EXISTS user (
     players8 VARCHAR(255) UNIQUE NOT NULL,
     players9 VARCHAR(255) UNIQUE NOT NULL,
     players10 VARCHAR(255) UNIQUE NOT NULL,
-    password VARCHAR(255) NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 )`, (err, results) => {
     if (err) {
@@ -59,10 +65,8 @@ db.query(`CREATE TABLE IF NOT EXISTS jeu (
     group_name VARCHAR(255) NOT NULL,
     points BIGINT NOT NULL,
     answers TEXT NOT NULL,
-    password VARCHAR(255) NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (group_name) REFERENCES user(group_name),
-    FOREIGN KEY (password) REFERENCES user(password)
+    FOREIGN KEY (group_name) REFERENCES user(group_name)
 )`, (err, results) => {
     if (err) {
         console.error('Error creating jeu table', err);
@@ -81,7 +85,7 @@ db.connect((err) => {
 
 app.post('/register', (req, res) => {
     console.log('Received data:', req.body);
-    const { group_name, players1, players2, players3, players4, players5, players6, players7, players8, players9, players10, password } = req.body;
+    const { group_name, players1, players2, players3, players4, players5, players6, players7, players8, players9, players10 } = req.body;
 
     db.query(
         `SELECT * FROM user WHERE group_name = ? OR players1 = ? OR players2 = ? OR players3 = ? OR players4 = ? OR players5 = ? OR players6 = ? OR players7 = ? OR players8 = ? OR players9 = ? OR players10 = ?`,
@@ -95,16 +99,16 @@ app.post('/register', (req, res) => {
                 return res.status(202).json({ msg: 'LE NOM DU JOUER OU DU GROUPE EXISTE DEJA | CONTACT YOUR ADMINISTRATOR' });
             }
             db.query(
-                `INSERT INTO user (group_name, players1, players2, players3, players4, players5, players6, players7, players8, players9, players10, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-                [group_name, players1, players2, players3, players4, players5, players6, players7, players8, players9, players10, password],
+                `INSERT INTO user (group_name, players1, players2, players3, players4, players5, players6, players7, players8, players9, players10) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                [group_name, players1, players2, players3, players4, players5, players6, players7, players8, players9, players10],
                 (err, results) => {
                     if (err) {
                         console.error('Database insertion error:', err);
                         return res.status(500).json({ msg: 'Database insertion error' });
                     }
                     db.query(
-                        `INSERT INTO jeu (group_name, points, answers, password) VALUES (?, 0, '', ?)`,
-                        [group_name, password],
+                        `INSERT INTO jeu (group_name, points, answers) VALUES (?, 0, '')`,
+                        [group_name],
                         (err, results) => {
                             if (err) {
                                 console.error('Database insertion error:', err);
@@ -123,78 +127,8 @@ app.post('/register', (req, res) => {
 
 app.post('/submit', (req, res) => {
     console.log('Received data:', req.body);
-    const { group_name, reponse, password } = req.body;
-    const validReponses = ['JAMES', 'CHANCE', 'KENZO', 'MERYL', 'LESLY'];
-
-    if (!validReponses.includes(reponse)) {
-        return res.status(202).json({ msg: 'Mauvaise Réponse' });
-    }
-
-    if (!password) {
-        return res.status(202).json({ msg: 'Le Mot de passe est important' });
-    }
-
-    db.query(`SELECT * FROM jeu WHERE group_name = ? AND password = ?`, [group_name, password], (err, results) => {
-        if (err) {
-            console.error('Database query error:', err);
-            return res.status(500).json({ msg: 'Database query error' });
-        }
-        if (results.length === 0) {
-            return res.status(200).json({ msg: 'Mot de Passe ou Nom du groupe Invalide' });
-        } else {
-            const user = results[0];
-            const answersArray = user.answers ? user.answers.split(',') : [];
-
-            if (answersArray.includes(reponse)) {
-                return res.status(200).json({ msg: 'Vous avez déjà soumis cette réponse' });
-            } else {
-                answersArray.push(reponse);
-                const newAnswers = answersArray.join(',');
-                let a = 0;
-
-                if (reponse === 'JAMES') {
-                    a = 50;
-                } else if (reponse === 'CHANCE') {
-                    a = 30;
-                } else if (reponse === 'KENZO' || reponse === 'MERYL' || reponse === 'LESLY') {
-                    a = 10;
-                }
-
-                db.query(`UPDATE jeu SET points = points + ?, answers = ? WHERE group_name = ?`, [a, newAnswers, group_name], (err, results) => {
-                    if (err) {
-                        console.error('Database update error:', err);
-                        return res.status(500).json({ msg: 'Database update error' });
-                    }
-                    res.status(200).json({ msg: `BONNE REPONSE VOUS OBTENEZ ${a}` });
-                });
-            }
-        }
-    });
-});
-
-
-app.get('/leaderboard', (req, res) => {
-    db.query(`SELECT group_name, points FROM jeu ORDER BY points DESC`, [], (err, results) => {
-        if (err) {
-            return res.status(500).json({ msg: err.message });
-        }
-        res.status(200).json(results);
-    });
-});
-
-app.get('/adminscore', (req, res) => {
-    db.query(`SELECT group_name, points, answers, password FROM jeu ORDER BY points DESC`, [], (err, results) => {
-        if (err) {
-            return res.status(500).json({ msg: err.message });
-        }
-        res.status(200).json(results);
-    });
-});
-
-app.post('/admin', (req, res) => {
-    console.log('Received data:', req.body);
     const { group_name, reponse } = req.body;
-    const validReponses = ['JAMES', 'CHANCE', 'KENZO', 'MERYL', 'LESLY'];
+    const validReponses = ['WEI', 'HUB', 'CAMPUS', 'CRYPTAGE', 'INTRUSION', 'QUEST', 'JAM'];
 
     if (!validReponses.includes(reponse)) {
         return res.status(202).json({ msg: 'Mauvaise Réponse' });
@@ -218,12 +152,14 @@ app.post('/admin', (req, res) => {
                 const newAnswers = answersArray.join(',');
                 let a = 0;
 
-                if (reponse === 'JAMES') {
-                    a = 50;
-                } else if (reponse === 'CHANCE') {
-                    a = 30;
-                } else if (reponse === 'KENZO' || reponse === 'MERYL' || reponse === 'LESLY') {
-                    a = 10;
+                if (reponse === 'WEI' || reponse === 'HUB' || reponse === ' CAMPUS') {
+                    a = 150;
+                } else if (reponse === 'CRYPTAGE' || reponse === 'INTRUSION' || reponse === 'QUEST' || reponse === 'JAM' ) {
+                    a = 100;
+                } else if (reponse === 'NON') {
+                    a = -50;
+                } else if (reponse === 'FAUX') {
+                    a = -100;
                 }
 
                 db.query(`UPDATE jeu SET points = points + ?, answers = ? WHERE group_name = ?`, [a, newAnswers, group_name], (err, results) => {
@@ -231,13 +167,77 @@ app.post('/admin', (req, res) => {
                         console.error('Database update error:', err);
                         return res.status(500).json({ msg: 'Database update error' });
                     }
-                    res.status(200).json({ msg: `BONNE REPONSE VOUS OBTENEZ ${a}` });
+                    res.status(200).json({ msg: `BONNE REPONSE VOUS OBTENEZ ${a} POUR LE GROUPE ${group_name}` });
                 });
             }
         }
     });
 });
 
+
+app.get('/leaderboard', (req, res) => {
+    db.query(`SELECT group_name, points FROM jeu ORDER BY points DESC`, [], (err, results) => {
+        if (err) {
+            return res.status(500).json({ msg: err.message });
+        }
+        res.status(200).json(results);
+    });
+});
+
+app.get('/adminscore', (req, res) => {
+    db.query(`SELECT group_name, points, answers FROM jeu ORDER BY points DESC`, [], (err, results) => {
+        if (err) {
+            return res.status(500).json({ msg: err.message });
+        }
+        res.status(200).json(results);
+    });
+});
+
+app.post('/admin', (req, res) => {
+    console.log('Received data:', req.body);
+    const { group_name, reponse } = req.body;
+    const validReponses = ['WEI', 'HUB', 'CAMPUS', 'CRYPTAGE', 'INTRUSION', 'QUEST', 'JAM', 'NON', 'FAUX'];
+
+    if (!validReponses.includes(reponse)) {
+        return res.status(202).json({ msg: 'Mauvaise Réponse' });
+    }
+
+
+    db.query(`SELECT * FROM jeu WHERE group_name = ?`, [group_name], (err, results) => {
+        if (err) {
+            console.error('Database query error:', err);
+            return res.status(500).json({ msg: 'Database query error' });
+        }
+        if (results.length === 0) {
+            return res.status(200).json({ msg: 'Nom du groupe Invalide' });
+        } else {
+            const user = results[0];
+            const answersArray = user.answers ? user.answers.split(',') : [];
+
+                answersArray.push(reponse);
+                const newAnswers = answersArray.join(',');
+                let a = 0;
+
+                if (reponse === 'WEI' || reponse === 'HUB' || reponse === ' CAMPUS') {
+                    a = 150;
+                } else if (reponse === 'CRYPTAGE' || reponse === 'INTRUSION' || reponse === 'QUEST' || reponse === 'JAM' ) {
+                    a = 100;
+                } else if (reponse === 'NON') {
+                    a = -50;
+                } else if (reponse === 'FAUX') {
+                    a = -100;
+                }
+
+                db.query(`UPDATE jeu SET points = points + ?, answers = ? WHERE group_name = ?`, [a, newAnswers, group_name], (err, results) => {
+                    if (err) {
+                        console.error('Database update error:', err);
+                        return res.status(500).json({ msg: 'Database update error' });
+                    }
+                    res.status(200).json({ msg: `MISE A JOUR DES POINTS DE ${a} POUR LE GROUPE ${group_name}` });
+                });
+            }
+    });
+});
 
 
 app.listen(PORT, () => {
