@@ -3,7 +3,7 @@ body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    background: url('') no-repeat center center/cover;
+    background: url('./assets/logo/test.jpeg') no-repeat center center/cover;
 }
 
 header {
@@ -185,6 +185,100 @@ button.btn-primary:hover {
     height: 50px;
 }
 
+.navbar {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #0b81c5;
+    padding: 10px;
+}
+.navbar h2 {
+    color: white;
+    margin: 0;
+}
+.navbar .btn {
+    color: white;
+    border: none;
+    background-color: transparent;
+    font-size: 16px;
+}
+.navbar .btn:hover {
+    text-decoration: underline;
+}
+.navbar .btn .fas {
+    margin-right: 5px;
+}
+
+.centered-button {
+    display: flex;
+    justify-content: center;
+    /* background-color: #0b81c5; */
+    align-items: center;
+    color: #0b81c5;
+    height: 100px;
+}
+
+/*  */
+
+.first-image-container {
+    background-color: var(--bs-gray-100);
+    border-radius: 15px;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    height: auto;
+    margin: 15px auto 0;
+    background-image: url('./assets/1_er-fond.jpg');
+    /* background-size: cover; */
+    color: var(--bs-white);
+    padding: 20px;
+}
+
+.first-image-text {
+    text-align: right;
+    color: var(--bs-body-color);
+}
+
+.first-image-text .first-item {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: var(--bs-primary);
+}
+
+.first-image-text .second-item {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: var(--bs-primary);
+    margin-bottom: 10px;
+}
+
+.first-image-text .third-item {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: var(--bs-primary);
+}
+
+.first-image-text .fourth-item {
+    display: flex;
+    align-items: baseline;
+    justify-content: flex-end;
+}
+
+.first-image-text .score-number {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+.first-image-text .score-number-text {
+    font-size: 1rem;
+    color: var(--bs-gray-600);
+}
+
+
+/*  */
 @media (max-width: 768px) {
     header {
         display: grid;
@@ -207,7 +301,7 @@ button.btn-primary:hover {
     }
     
     .logo_central {
-        max-width: 60px; /* Adjust size as needed */
+        max-width: 60px;
     }
 
     header nav ul {

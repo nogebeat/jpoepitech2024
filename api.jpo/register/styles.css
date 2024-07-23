@@ -3,7 +3,7 @@ body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    background: url('') no-repeat center center/cover;
+    background: url('./assets/logo/test.jpeg') no-repeat center center/cover;
 }
 
 header {
@@ -27,7 +27,7 @@ header {
 }
 
 .logo_central {
-    max-width: 100px; /* Adjust size as needed */
+    max-width: 100px;
 }
 
 header .logo {
@@ -183,6 +183,39 @@ button.btn-primary:hover {
 .but_social {
     width: 50px;
     height: 50px;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #0b81c5;
+    padding: 10px;
+}
+.navbar h2 {
+    color: white;
+    margin: 0;
+}
+.navbar .btn {
+    color: white;
+    border: none;
+    background-color: transparent;
+    font-size: 16px;
+}
+.navbar .btn:hover {
+    text-decoration: underline;
+}
+.navbar .btn .fas {
+    margin-right: 5px;
+}
+
+.centered-button {
+    display: flex;
+    justify-content: center;
+    /* background-color: #0b81c5; */
+    align-items: center;
+    color: #0b81c5;
+    height: 100px;
 }
 
 @media (max-width: 768px) {

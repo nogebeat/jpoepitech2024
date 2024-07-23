@@ -42,6 +42,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 data.sort((a, b) => b.points - a.points);
 
+                if (data.length > 0) {
+                    const firstPlace = data[0];
+                    document.getElementById('first-name').textContent = firstPlace.group_name;
+                    document.getElementById('first-score').textContent = firstPlace.points.toLocaleString();
+                }
+
                 data.forEach((user, index) => {
                     const row = document.createElement('tr');
                     const rankCell = document.createElement('td');
