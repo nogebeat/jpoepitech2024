@@ -234,6 +234,10 @@ button.btn-primary:hover {
     padding: 20px;
 }
 
+.form-label{
+    color: #ffffff;
+}
+
 .first-image-text {
     text-align: right;
     color: var(--bs-body-color);
