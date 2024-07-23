@@ -3,7 +3,7 @@ body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    background: url('./assets/logo/test2.jpg') no-repeat center center/cover;
+    background: black;
     
     /* background-size: cover;
     background-position: center; */
@@ -188,9 +188,10 @@ button.btn-primary:hover {
     height: 50px;
 }
 
-/* .form-label{
+.form-label{
     color: #ffffff;
-} */
+}
+
 .navbar {
     display: flex;
     justify-content: space-around;
