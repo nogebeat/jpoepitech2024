@@ -3,7 +3,7 @@ body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    background: url('./assets/logo/test.jpeg') no-repeat center center/cover;
+    background: url('./assets/logo/test2.jpg') no-repeat center center/cover;
 }
 
 header {
@@ -234,9 +234,9 @@ button.btn-primary:hover {
     padding: 20px;
 }
 
-.form-label{
+/* .form-label{
     color: #ffffff;
-}
+} */
 
 .first-image-text {
     text-align: right;

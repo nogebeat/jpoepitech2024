@@ -3,7 +3,10 @@ body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    background: url('./assets/logo/test.jpeg') no-repeat center center/cover;
+    background: url('./assets/logo/test2.jpg') no-repeat center center/cover;
+    
+    /* background-size: cover;
+    background-position: center; */
 }
 
 header {
@@ -185,9 +188,9 @@ button.btn-primary:hover {
     height: 50px;
 }
 
-.form-label{
+/* .form-label{
     color: #ffffff;
-}
+} */
 .navbar {
     display: flex;
     justify-content: space-around;
@@ -222,6 +225,10 @@ button.btn-primary:hover {
 }
 
 @media (max-width: 768px) {
+    .body {
+        background: url('./assets/logo/test3.jpg') no-repeat center center/cover;
+    }
+
     header {
         display: grid;
         /* grid-template-columns: 1fr auto 1fr; */
