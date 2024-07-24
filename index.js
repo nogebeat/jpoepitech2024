@@ -16,19 +16,19 @@ app.use('/admin', express.static(path.join(__dirname, 'api.jpo/admin')));
 
 app.use('/', express.static(path.join(__dirname, 'api.jpo/register')));
 
-// const db = mysql.createConnection({
-//     host: 'mysql-jpoepitech.alwaysdata.net',
-//     user: '369894',
-//     password: 'jpoepitechnogeproductions2024',
-//     database: 'jpoepitech_jpo2024'
-// });
-
 const db = mysql.createConnection({
-        host: 'localhost',
-        user: 'root',
-        password: '',
-        database: 'jpo'
-    });
+    host: 'mysql-jpoepitech.alwaysdata.net',
+    user: '369894',
+    password: 'jpoepitechnogeproductions2024',
+    database: 'jpoepitech_jpo2024'
+});
+
+// const db = mysql.createConnection({
+//         host: 'localhost',
+//         user: 'root',
+//         password: '',
+//         database: 'jpo'
+//     });
 
 db.connect((err) => {
     if (err) {
