@@ -19,6 +19,9 @@
     <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.css">
+<script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
+
     <title>Submit Points</title>
     <link rel="stylesheet" href="./styles.css">
 </head>
@@ -49,22 +52,25 @@
  
     <!-- A NE PAS TOUCHER INHHH  -->
 
- <section id="submit" class="py-5" data-aos="fade-up">
-     <div class="container">
-         <h2 style=" color: #ffffff">Submit Your Points</h2>
-         <form id="submit-form" class="mb-4">
-             <div class="mb-3">
-                 <label for="groupName" class="form-label">Group Name</label>
-                 <input type="text" class="form-control" id="groupName" name="group_name" required>
+    <section id="submit" class="py-5" data-aos="fade-up">
+        <div class="container">
+            <h2 style="color: #ffffff">Submit Your Points</h2>
+            <form id="submit-form" class="mb-4">
+                <div class="mb-3">
+                    <label for="groupName" class="form-label">Group Name</label>
+                    <input type="text" class="form-control" id="groupName" name="group_name" required>
                 </div>
                 <div class="mb-3">
-                    <label for="points" class="form-label">Your Answer</label>
-                    <input type="text" class="form-control" id="points" name="reponse" required>
-                </div>
+                    <div id="reader" style="width: 500px; height: auto;"></div>
+                    <div id="response-message" class="alert d-none" role="alert"></div>
+                    <div id="msg"></div>
+                    <!-- <label for="points" class="form-label">Your Answer</label>
+                    <input type="text" class="form-control" id="points" name="reponse" required> -->
+                
+            </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
-            <div id="response-message" class="alert d-none" role="alert"></div>
-            <div id="msg"></div>
+            
         </div>
     </section>
 
