@@ -16,19 +16,19 @@ app.use('/admin', express.static(path.join(__dirname, 'api.jpo/admin')));
 
 app.use('/', express.static(path.join(__dirname, 'api.jpo/register')));
 
-const db = mysql.createConnection({
-    host: 'mysql-jpoepitech.alwaysdata.net',
-    user: '369894',
-    password: 'jpoepitechnogeproductions2024',
-    database: 'jpoepitech_jpo2024'
-});
-
 // const db = mysql.createConnection({
-//         host: 'localhost',
-//         user: 'root',
-//         password: '',
-//         database: 'jpo'
-//     });
+//     host: 'mysql-jpoepitech.alwaysdata.net',
+//     user: '369894',
+//     password: 'jpoepitechnogeproductions2024',
+//     database: 'jpoepitech_jpo2024'
+// });
+
+const db = mysql.createConnection({
+        host: 'localhost',
+        user: 'root',
+        password: '',
+        database: 'jpo'
+    });
 
 db.connect((err) => {
     if (err) {
@@ -128,51 +128,72 @@ app.post('/register', (req, res) => {
 app.post('/submit', (req, res) => {
     console.log('Received data:', req.body);
     const { group_name, reponse } = req.body;
-    const validReponses = ['WEI', 'HUB', 'CAMPUS', 'CRYPTAGE', 'INTRUSION', 'QUEST', 'JAM'];
+    const validReponses = ['WEI', 'HUB', 'CAMPUS', 'CRYPTAGE', 'INTRUSION', 'QUEST', 'JAM', 'JAMES', 'ORACE'];
 
     if (!validReponses.includes(reponse)) {
         return res.status(202).json({ msg: 'Mauvaise Réponse' });
     }
 
-    db.query(`SELECT * FROM jeu WHERE group_name = ?`, [group_name], (err, results) => {
-        if (err) {
-            console.error('Database query error:', err);
-            return res.status(500).json({ msg: 'Database query error' });
-        }
-        if (results.length === 0) {
-            return res.status(200).json({ msg: 'Nom du groupe Invalide' });
-        } else {
-            const user = results[0];
-            const answersArray = user.answers ? user.answers.split(',') : [];
-
-            if (answersArray.includes(reponse)) {
-                return res.status(200).json({ msg: 'Vous avez déjà soumis cette réponse' });
-            } else {
-                answersArray.push(reponse);
-                const newAnswers = answersArray.join(',');
-                let a = 0;
-
-                if (reponse === 'WEI' || reponse === 'HUB' || reponse === ' CAMPUS') {
-                    a = 150;
-                } else if (reponse === 'CRYPTAGE' || reponse === 'INTRUSION' || reponse === 'QUEST' || reponse === 'JAM' ) {
-                    a = 100;
-                } else if (reponse === 'NON') {
-                    a = -50;
-                } else if (reponse === 'FAUX') {
-                    a = -100;
-                }
-
-                db.query(`UPDATE jeu SET points = points + ?, answers = ? WHERE group_name = ?`, [a, newAnswers, group_name], (err, results) => {
-                    if (err) {
-                        console.error('Database update error:', err);
-                        return res.status(500).json({ msg: 'Database update error' });
-                    }
-                    res.status(200).json({ msg: `BONNE REPONSE VOUS OBTENEZ ${a} POUR LE GROUPE ${group_name}` });
-                });
+    if (reponse === 'JAMES') {
+        db.query(`SELECT * FROM jeu WHERE FIND_IN_SET('JAMES', answers)`, (err, results) => {
+            if (err) {
+                console.error('Database query error:', err);
+                return res.status(500).json({ msg: 'Database query error' });
             }
-        }
-    });
+            if (results.length > 0) {
+                return res.status(200).json({ msg: 'Le mot "JAMES" a déjà été scanné par un autre groupe' });
+            } else {
+                processSubmission();
+            }
+        });
+    } else {
+        processSubmission();
+    }
+
+    function processSubmission() {
+        db.query(`SELECT * FROM jeu WHERE group_name = ?`, [group_name], (err, results) => {
+            if (err) {
+                console.error('Database query error:', err);
+                return res.status(500).json({ msg: 'Database query error' });
+            }
+            if (results.length === 0) {
+                return res.status(200).json({ msg: 'Nom du groupe Invalide' });
+            } else {
+                const user = results[0];
+                const answersArray = user.answers ? user.answers.split(',') : [];
+
+                if (answersArray.includes(reponse) && reponse !== 'ORACE') {
+                    return res.status(200).json({ msg: 'Vous avez déjà soumis cette réponse' });
+                } else {
+                    if (reponse !== 'ORACE') {
+                        answersArray.push(reponse);
+                    }
+                    const newAnswers = answersArray.join(',');
+                    let a = 0;
+
+                    if (reponse === 'WEI' || reponse === 'HUB' || reponse === 'CAMPUS') {
+                        a = 150;
+                    } else if (reponse === 'CRYPTAGE' || reponse === 'INTRUSION' || reponse === 'QUEST' || reponse === 'JAM' || reponse === 'JAMES') {
+                        a = 100;
+                    } else if (reponse === 'NON') {
+                        a = -50;
+                    } else if (reponse === 'FAUX' || reponse === 'ORACE') {
+                        a = -100;
+                    }
+
+                    db.query(`UPDATE jeu SET points = points + ?, answers = ? WHERE group_name = ?`, [a, newAnswers, group_name], (err, results) => {
+                        if (err) {
+                            console.error('Database update error:', err);
+                            return res.status(500).json({ msg: 'Database update error' });
+                        }
+                        res.status(200).json({ msg: `BONNE REPONSE VOUS OBTENEZ ${a} POUR LE GROUPE ${group_name}` });
+                    });
+                }
+            }
+        });
+    }
 });
+
 
 
 app.get('/leaderboard', (req, res) => {
@@ -196,47 +217,70 @@ app.get('/adminscore', (req, res) => {
 app.post('/admin', (req, res) => {
     console.log('Received data:', req.body);
     const { group_name, reponse } = req.body;
-    const validReponses = ['WEI', 'HUB', 'CAMPUS', 'CRYPTAGE', 'INTRUSION', 'QUEST', 'JAM', 'NON', 'FAUX'];
+    const validReponses = ['WEI', 'HUB', 'CAMPUS', 'CRYPTAGE', 'INTRUSION', 'QUEST', 'JAM', 'JAMES', 'ORACE', 'NON', 'FAUX'];
 
     if (!validReponses.includes(reponse)) {
         return res.status(202).json({ msg: 'Mauvaise Réponse' });
     }
 
-
-    db.query(`SELECT * FROM jeu WHERE group_name = ?`, [group_name], (err, results) => {
-        if (err) {
-            console.error('Database query error:', err);
-            return res.status(500).json({ msg: 'Database query error' });
-        }
-        if (results.length === 0) {
-            return res.status(200).json({ msg: 'Nom du groupe Invalide' });
-        } else {
-            const user = results[0];
-            const answersArray = user.answers ? user.answers.split(',') : [];
-
-                answersArray.push(reponse);
-                const newAnswers = answersArray.join(',');
-                let a = 0;
-
-                if (reponse === 'WEI' || reponse === 'HUB' || reponse === ' CAMPUS') {
-                    a = 150;
-                } else if (reponse === 'CRYPTAGE' || reponse === 'INTRUSION' || reponse === 'QUEST' || reponse === 'JAM' ) {
-                    a = 100;
-                } else if (reponse === 'NON') {
-                    a = -50;
-                } else if (reponse === 'FAUX') {
-                    a = -100;
-                }
-
-                db.query(`UPDATE jeu SET points = points + ?, answers = ? WHERE group_name = ?`, [a, newAnswers, group_name], (err, results) => {
-                    if (err) {
-                        console.error('Database update error:', err);
-                        return res.status(500).json({ msg: 'Database update error' });
-                    }
-                    res.status(200).json({ msg: `MISE A JOUR DES POINTS DE ${a} POUR LE GROUPE ${group_name}` });
-                });
+    if (reponse === 'JAMES') {
+        db.query(`SELECT * FROM jeu WHERE FIND_IN_SET('JAMES', answers)`, (err, results) => {
+            if (err) {
+                console.error('Database query error:', err);
+                return res.status(500).json({ msg: 'Database query error' });
             }
-    });
+            if (results.length > 0) {
+                return res.status(200).json({ msg: 'Le mot "JAMES" a déjà été scanné par un autre groupe' });
+            } else {
+                processSubmission();
+            }
+        });
+    } else {
+        processSubmission();
+    }
+
+    function processSubmission() {
+        db.query(`SELECT * FROM jeu WHERE group_name = ?`, [group_name], (err, results) => {
+            if (err) {
+                console.error('Database query error:', err);
+                return res.status(500).json({ msg: 'Database query error' });
+            }
+            if (results.length === 0) {
+                return res.status(200).json({ msg: 'Nom du groupe Invalide' });
+            } else {
+                const user = results[0];
+                const answersArray = user.answers ? user.answers.split(',') : [];
+
+                if (answersArray.includes(reponse) && reponse !== 'ORACE') {
+                    return res.status(200).json({ msg: 'Vous avez déjà soumis cette réponse' });
+                } else {
+                    if (reponse !== 'ORACE') {
+                        answersArray.push(reponse);
+                    }
+                    const newAnswers = answersArray.join(',');
+                    let a = 0;
+
+                    if (reponse === 'WEI' || reponse === 'HUB' || reponse === 'CAMPUS') {
+                        a = 150;
+                    } else if (reponse === 'CRYPTAGE' || reponse === 'INTRUSION' || reponse === 'QUEST' || reponse === 'JAM' || reponse === 'JAMES') {
+                        a = 100;
+                    } else if (reponse === 'NON') {
+                        a = -50;
+                    } else if (reponse === 'FAUX' || reponse === 'ORACE') {
+                        a = -100;
+                    }
+
+                    db.query(`UPDATE jeu SET points = points + ?, answers = ? WHERE group_name = ?`, [a, newAnswers, group_name], (err, results) => {
+                        if (err) {
+                            console.error('Database update error:', err);
+                            return res.status(500).json({ msg: 'Database update error' });
+                        }
+                        res.status(200).json({ msg: `BONNE REPONSE VOUS OBTENEZ ${a} POUR LE GROUPE ${group_name}` });
+                    });
+                }
+            }
+        });
+    }
 });
 
 
