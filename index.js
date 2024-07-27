@@ -140,7 +140,7 @@ app.post('/submit', (req, res) => {
                 console.error('Database query error:', err);
                 return res.status(500).json({ msg: 'Database query error' });
             }
-            if (results.length > 0) {
+            if (results.length > 16) {
                 return res.status(200).json({ msg: 'Le mot "JAMES" a déjà été scanné par un autre groupe' });
             } else {
                 processSubmission();
